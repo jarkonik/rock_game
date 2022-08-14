@@ -1,0 +1,28 @@
+load("./rock-sdl-bind/target/debug/librock_sdl_bind.so")
+rocksdlinit = extern<ptr>("rock_sdl_init")
+rocksdlloop = extern<ptr, void>("rock_sdl_loop")
+rocksdlloadtexture = extern<ptr, cstring, ptr>("rock_sdl_load_texture")
+rocksdlrendertexture = extern<ptr, ptr, number, number, void>("rock_sdl_render_texture")
+
+sdlstate = rocksdlinit()
+rocktexture = rocksdlloadtexture(sdlstate, c_string_from_string("rock.png"))
+
+y = 0
+gforce = 2
+height = 500
+rockheight = 100
+v = 0
+
+while true {
+	rocksdlloop(sdlstate)
+	rocksdlrendertexture(sdlstate, rocktexture, 100, y)
+	upforce = 0
+
+	if y + rockheight > height {
+		v = -v
+		y = height - rockheight
+	}
+
+	v = v + gforce + upforce
+	y = y + v
+}
