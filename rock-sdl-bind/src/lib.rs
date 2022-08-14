@@ -13,8 +13,10 @@ use std::ffi::CStr;
 use std::time::Duration;
 
 #[no_mangle]
-pub extern "C" fn rock_sdl_init() -> *mut State {
-    Box::into_raw(Box::new(rock_sdl_init_internal().unwrap()))
+pub extern "C" fn rock_sdl_init(x: f64, y: f64) -> *mut State {
+    Box::into_raw(Box::new(
+        rock_sdl_init_internal(x as u32, y as u32).unwrap(),
+    ))
 }
 
 #[no_mangle]
@@ -83,12 +85,12 @@ pub extern "C" fn rock_sdl_loop(state_ptr: *mut State) {
     Box::into_raw(Box::new(state));
 }
 
-fn rock_sdl_init_internal() -> Result<State, String> {
+fn rock_sdl_init_internal(width: u32, height: u32) -> Result<State, String> {
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
 
     let window = video_subsystem
-        .window("rocksdl", 500, 500)
+        .window("rocksdl", width, height)
         .position_centered()
         .opengl()
         .build()

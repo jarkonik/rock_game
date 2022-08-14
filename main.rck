@@ -1,27 +1,39 @@
 load("./rock-sdl-bind/target/debug/librock_sdl_bind.so")
-rocksdlinit = extern<ptr>("rock_sdl_init")
-rocksdlloop = extern<ptr, void>("rock_sdl_loop")
-rocksdlloadtexture = extern<ptr, cstring, ptr>("rock_sdl_load_texture")
-rocksdlrendertexture = extern<ptr, ptr, number, number, void>("rock_sdl_render_texture")
 
-sdlstate = rocksdlinit()
-rocktexture = rocksdlloadtexture(sdlstate, c_string_from_string("rock.png"))
+rock_sdl_init = extern<number, number, ptr>("rock_sdl_init")
+rock_sdl_loop = extern<ptr, void>("rock_sdl_loop")
+rock_sdl_load_texture = extern<ptr, cstring, ptr>("rock_sdl_load_texture")
+rock_sdl_render_texture = extern<ptr, ptr, number, number, void>("rock_sdl_render_texture")
 
+window_width = 1920
+window_height = 1080
+
+x = 0
 y = 0
-gforce = 2
-height = 500
-rockheight = 100
-v = 0
+g_force = 2
+rock_height = 100
+
+// Initial velocity
+vy = 0
+vx = 1
+
+sdl = rock_sdl_init(window_width, window_height)
+rock_texture = rock_sdl_load_texture(sdl, c_string_from_string("rock.png"))
 
 while true {
-	rocksdlloop(sdlstate)
-	rocksdlrendertexture(sdlstate, rocktexture, 100, y)
+	rock_sdl_loop(sdl)
+	rock_sdl_render_texture(sdl, rock_texture, x, y)
 
-	if y + rockheight > height {
-		v = -v
-		y = height - rockheight
+	// Bounce off the floor
+	if y + rock_height > window_height {
+		vy = -vy
+		y = window_height - rock_height
 	}
 
-	v = v + gforce
-	y = y + v
+	// Add gravity to y velocity
+	vy = vy + g_force
+
+	// Add velocity to position
+	y = y + vy
+	x = x + vx
 }
