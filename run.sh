@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rocklang main.rc
+rocklang main.rck

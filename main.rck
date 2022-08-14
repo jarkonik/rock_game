@@ -16,13 +16,12 @@ v = 0
 while true {
 	rocksdlloop(sdlstate)
 	rocksdlrendertexture(sdlstate, rocktexture, 100, y)
-	upforce = 0
 
 	if y + rockheight > height {
 		v = -v
 		y = height - rockheight
 	}
 
-	v = v + gforce + upforce
+	v = v + gforce
 	y = y + v
 }
