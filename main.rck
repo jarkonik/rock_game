@@ -1,9 +1,9 @@
 load("./rock-sdl-bind/target/debug/librock_sdl_bind.so")
 
-rock_sdl_init = extern<number, number, ptr>("rock_sdl_init")
-rock_sdl_loop = extern<ptr, void>("rock_sdl_loop")
-rock_sdl_load_texture = extern<ptr, cstring, ptr>("rock_sdl_load_texture")
-rock_sdl_render_texture = extern<ptr, ptr, number, number, void>("rock_sdl_render_texture")
+sdl_init = extern<number, number, ptr>("rock_sdl_init")
+sdl_loop = extern<ptr, void>("rock_sdl_loop")
+sdl_load_texture = extern<ptr, cstring, ptr>("rock_sdl_load_texture")
+sdl_render_texture = extern<ptr, ptr, number, number, void>("rock_sdl_render_texture")
 
 window_width = 1920
 window_height = 1080
@@ -17,12 +17,12 @@ rock_height = 100
 vy = 0
 vx = 1
 
-sdl = rock_sdl_init(window_width, window_height)
-rock_texture = rock_sdl_load_texture(sdl, c_string_from_string("rock.png"))
+sdl = sdl_init(window_width, window_height)
+rock_texture = sdl_load_texture(sdl, c_string_from_string("rock.png"))
 
 while true {
-	rock_sdl_loop(sdl)
-	rock_sdl_render_texture(sdl, rock_texture, x, y)
+	sdl_loop(sdl)
+	sdl_render_texture(sdl, rock_texture, x, y)
 
 	// Bounce off the floor
 	if y + rock_height > window_height {
